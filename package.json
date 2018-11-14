@@ -1,0 +1,26 @@
+{
+    "name": "cpns",
+    "version": "0.0.1",
+    "author": "Michael Hanus <mh@informatik.uni-kiel.de>",
+    "synopsis": "Curry port name server and sockets with symbolic names",
+    "category": [ "Network" ],
+    "license": "BSD-3-Clause",
+    "licenseFile": "LICENSE",
+    "dependencies": {
+        "base"    : ">= 1.0.0, < 2.0.0",
+        "execpath": ">= 0.0.1"
+    },
+    "compilerCompatibility": {
+        "pakcs": ">= 2.0.0",
+        "kics2": ">= 2.0.0"
+    },
+    "exportedModules": [ "Network.CPNS", "Network.NamedSocket" ],
+    "executable": {
+        "name": "curry-cpnsd",
+        "main": "Network.CPNSD"
+    },
+    "source": {
+      "git": "https://git.ps.informatik.uni-kiel.de/curry-packages/cpns.git",
+      "tag": "$version"
+    }
+}
