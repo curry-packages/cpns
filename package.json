@@ -17,7 +17,8 @@
     "exportedModules": [ "Network.CPNS", "Network.NamedSocket" ],
     "executable": {
         "name": "curry-cpnsd",
-        "main": "Network.CPNSD"
+        "main": "Network.CPNSD",
+        "options": { "kics2" : ":set rts -T" }
     },
     "source": {
       "git": "https://git.ps.informatik.uni-kiel.de/curry-packages/cpns.git",
