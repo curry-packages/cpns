@@ -4,7 +4,7 @@
 --- the library `Ports` for distributed programming with ports.
 ---
 --- @author Michael Hanus
---- @version November 2018
+--- @version December 2018
 ------------------------------------------------------------------------------
 
 module Network.CPNS
@@ -17,9 +17,10 @@ import Char     ( isSpace )
 import IO
 import List     ( delete )
 import Profile
-import Socket
 import System
 import Time
+
+import Network.Socket
 
 import Network.CPNS.Config
 
@@ -75,7 +76,7 @@ cpnsStart = catch startup
 --- The main loop of the CPNS demon
 cpnsServer :: [(String,Int,Int,Int)] -> Socket -> IO ()
 cpnsServer regs socket = do
-  (chost,stream) <- socketAccept socket
+  (chost,stream) <- accept socket
   --addLogLn $ "Connection from "++chost
   serveRequest chost stream
  where

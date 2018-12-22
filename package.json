@@ -8,7 +8,8 @@
     "licenseFile": "LICENSE",
     "dependencies": {
         "base"    : ">= 1.0.0, < 2.0.0",
-        "execpath": ">= 0.0.1"
+        "execpath": ">= 0.0.1",
+        "socket"  : ">= 0.0.1"
     },
     "compilerCompatibility": {
         "pakcs": ">= 2.0.0",

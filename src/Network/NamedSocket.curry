@@ -11,7 +11,7 @@
 --- `connectToSocket` to request a service.
 ---
 --- @author Michael Hanus
---- @version November 2018
+--- @version December 2018
 ------------------------------------------------------------------------------
 
 module Network.NamedSocket
@@ -24,7 +24,7 @@ module Network.NamedSocket
 
 import System (sleep)
 import IO(Handle)
-import qualified Socket
+import qualified Network.Socket as Socket
 import Network.CPNS
 
 ---------------------------------------------------------------------
@@ -46,7 +46,7 @@ listenOn socketname = do
 --- and a handle to a stream communication with the client.
 --- The handle is both readable and writable.
 socketAccept :: Socket -> IO (String,Handle)
-socketAccept (NamedSocket _ socket) = Socket.socketAccept socket
+socketAccept (NamedSocket _ socket) = Socket.accept socket
 
 --- Waits until a connection of a client to a socket is available.
 --- If no connection is available within the time limit, it returns Nothing,
@@ -62,7 +62,7 @@ waitForSocketAccept (NamedSocket _ socket) = Socket.waitForSocketAccept socket
 --- Closes a server socket.
 sClose :: Socket -> IO ()
 sClose (NamedSocket socketname socket) = do
-  Socket.sClose socket
+  Socket.close socket
   unregisterPort socketname
 
 --- Returns a the symbolic name of a named socket.
