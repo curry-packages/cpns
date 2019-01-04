@@ -4,7 +4,7 @@
 --- the library `Ports` for distributed programming with ports.
 ---
 --- @author Michael Hanus
---- @version December 2018
+--- @version January 2019
 ------------------------------------------------------------------------------
 
 module Network.CPNS
@@ -16,10 +16,10 @@ module Network.CPNS
 import Char     ( isSpace )
 import IO
 import List     ( delete )
-import Profile
 import System
 import Time
 
+import Debug.Profile  ( getProcessInfos, showMemInfo )
 import Network.Socket
 
 import Network.CPNS.Config

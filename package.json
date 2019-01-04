@@ -7,9 +7,10 @@
     "license": "BSD-3-Clause",
     "licenseFile": "LICENSE",
     "dependencies": {
-        "base"    : ">= 1.0.0, < 2.0.0",
-        "execpath": ">= 0.0.1",
-        "socket"  : ">= 0.0.1"
+        "base"     : ">= 1.0.0, < 2.0.0",
+        "execpath" : ">= 0.0.1",
+        "profiling": ">= 0.0.1",
+        "socket"   : ">= 0.0.1"
     },
     "compilerCompatibility": {
         "pakcs": ">= 2.0.0",
