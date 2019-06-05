@@ -41,7 +41,6 @@ startServerIfNecessary = do
 
 startServer :: IO ()
 startServer = do
-  cpnsbin <- getCPNSD
   lockfile <- getStartupLockFile
   lfc <- system $ "lockfile-create --lock-name " ++ lockfile
   if lfc == 0
@@ -60,6 +59,7 @@ startServer = do
       appendFile logfile $
         "CPNS demon started at " ++ calendarTimeToString ctime ++ "\n"
       -- start CPNSD in server mode:
+      cpnsbin <- getCPNSD
       system $ "nohup \"" ++ cpnsbin ++ "\" serve >> " ++ logfile ++ " 2>&1  &"
       lockFileCreateAndRemove lockfile
       putErrLn "CPNS demon started."

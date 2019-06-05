@@ -1,9 +1,18 @@
 ------------------------------------------------------------------------------
---- Configurations of the implementation of a Curry Port Name Server
---- based on raw sockets.
+--- Configurations of the implementation of a Curry Port Name Server (CPNS)
+--- based on raw sockets. The CPNS allows the connection to port by
+--- symbolic names.
+---
+--- If we connect to a port with symbolic name `pn`, we first connect
+--- to the CPNS of the host named by `pn` to get the physical socket
+--- number of this port. In order to connect to CPNS from any
+--- machine in the world, the CPNS demon always listens at port `cpnsSocket`.
+--- Note that this port must be identical for all machines running
+--- `Network.NamedSocket` or Distributed Curry! If this port is occupied
+--- by another process on a host, you cannot run CPNSD on it.
 ---
 --- @author Michael Hanus
---- @version November 2018
+--- @version June 2019
 ------------------------------------------------------------------------------
 
 module Network.CPNS.Config
@@ -17,20 +26,12 @@ import FilePath     ( (</>) )
 import List         ( splitOn )
 import System       ( getEnviron )
 
-import System.Path  ( fileInPath )
+import Network.CPNS.ConfigPackage ( packageExecutable )
 
--- If we connect to a port with symbolic name pn, we first connect
--- to the CPNS of the host named by pn to get the physical socket
--- number of this port. In order to connect to CPNS from any
--- machine in the world, the CPNS demon always listens at port `cpnsSocket`.
--- (Note that this must be identical for all machines running
--- `Network.NamedSocket` or Distributed Curry! If this port is occupied
--- by another process on a host, you cannot run CPNSD on it.)
 
 -- The standard port number of CPNS demon.
 cpnsSocket :: Int
 cpnsSocket = 8769
-
 
 -- The time out before considering the server as unreachable:
 cpnsTimeOut :: Int
@@ -46,8 +47,8 @@ getStartupLockFile = do
 --- Raises an error if the executable does not exist.
 getCPNSD :: IO String
 getCPNSD = do
-  let cpnsbin = "curry-cpnsd"
-  exbin <- fileInPath cpnsbin
+  let cpnsbin = packageExecutable
+  exbin <- doesFileExist cpnsbin
   if exbin
     then return cpnsbin
     else error "CPNS demon not found in path! Install it by: cypm install cpns"
