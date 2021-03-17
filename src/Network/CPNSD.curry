@@ -2,16 +2,19 @@
 --- This is the main program of the CPNS demon.
 ---
 --- @author Michael Hanus
---- @version November 2018
+--- @version March 2021
 ------------------------------------------------------------------------
 
 module Network.CPNSD
  where
 
-import Directory ( doesFileExist )
-import IO        ( hFlush, hPutStrLn, stderr )
-import System    ( getArgs, getPID, system )
-import Time      ( calendarTimeToString, getLocalTime )
+import Control.Monad      ( unless )
+import System.Environment ( getArgs )
+
+import Data.Time          ( calendarTimeToString, getLocalTime )
+import System.Directory   ( doesFileExist )
+import System.IO          ( hFlush, hPutStrLn, stderr )
+import System.Process     ( getPID, system )
 
 import Network.CPNS
 import Network.CPNS.Config
@@ -53,7 +56,7 @@ startServer = do
         system $ "touch " ++ logfile
         -- make log file accessible for everybody:
         system $ "chmod -f 666 " ++ logfile
-        done
+        return ()
       putErrLn $ "Log information in file '" ++ logfile ++ "'"
       ctime <- getLocalTime
       appendFile logfile $
@@ -72,7 +75,7 @@ startServer = do
   lockFileCreateAndRemove lockfile = do
     system $ "lockfile-create --lock-name " ++ lockfile
     system $ "lockfile-remove --lock-name " ++ lockfile
-    done
+    return ()
 
 --- Terminate the Curry Port Name Server demon, if it is not already terminated.
 stopServer :: IO ()

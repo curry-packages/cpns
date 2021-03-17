@@ -1,19 +1,19 @@
 {
     "name": "cpns",
-    "version": "0.0.1",
+    "version": "3.0.0",
     "author": "Michael Hanus <mh@informatik.uni-kiel.de>",
     "synopsis": "Curry port name server and sockets with symbolic names",
     "category": [ "Network" ],
     "license": "BSD-3-Clause",
     "licenseFile": "LICENSE",
     "dependencies": {
-        "base"     : ">= 1.0.0, < 2.0.0",
-        "profiling": ">= 0.0.1",
-        "socket"   : ">= 0.0.1"
-    },
-    "compilerCompatibility": {
-        "pakcs": ">= 2.0.0",
-        "kics2": ">= 2.0.0"
+        "base"     : ">= 3.0.0, < 4.0.0",
+        "directory": ">= 3.0.0, < 4.0.0",
+        "filepath" : ">= 3.0.0, < 4.0.0",
+        "profiling": ">= 3.0.0, < 4.0.0",
+        "process"  : ">= 3.0.0, < 4.0.0",
+        "socket"   : ">= 3.0.0, < 4.0.0",
+        "time"     : ">= 3.0.0, < 4.0.0"
     },
     "configModule": "Network.CPNS.ConfigPackage",
     "exportedModules": [ "Network.CPNS", "Network.NamedSocket" ],

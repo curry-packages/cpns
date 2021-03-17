@@ -12,7 +12,7 @@
 --- by another process on a host, you cannot run CPNSD on it.
 ---
 --- @author Michael Hanus
---- @version June 2019
+--- @version March 2021
 ------------------------------------------------------------------------------
 
 module Network.CPNS.Config
@@ -21,10 +21,8 @@ module Network.CPNS.Config
   )
  where
 
-import Directory    ( doesFileExist, getTemporaryDirectory )
-import FilePath     ( (</>) )
-import List         ( splitOn )
-import System       ( getEnviron )
+import System.Directory   ( doesFileExist, getTemporaryDirectory )
+import System.FilePath    ( (</>) )
 
 import Network.CPNS.ConfigPackage ( packageExecutable )
 
@@ -35,7 +33,7 @@ cpnsSocket = 8769
 
 -- The time out before considering the server as unreachable:
 cpnsTimeOut :: Int
-cpnsTimeOut = 3000
+cpnsTimeOut = 6000
 
 --- Gets name of lock file to coordinate the startup of the CPNS demon.
 getStartupLockFile :: IO String

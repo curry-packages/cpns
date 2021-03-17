@@ -2,10 +2,10 @@
 --- A simple "addition" server to test the library `Network.NamedSocket`.
 ---
 --- @author Michael Hanus
---- @version November 2018
+--- @version March 2021
 ------------------------------------------------------------------------------
 
-import IO
+import System.IO
 import Network.NamedSocket
 
 -- The symbolic name for the server socket:
@@ -14,7 +14,7 @@ addSocketName = "addserver"
 
 sendTo :: String -> String -> IO ()
 sendTo host msg = do
-  h <- connectToSocket (addSocketName++"@"++host)
+  h <- connectToSocket (addSocketName ++ "@" ++ host)
   hPutStr h msg
   hClose h
 
@@ -32,7 +32,7 @@ addServer = do
 addServeSocket :: Network.NamedSocket.Socket -> IO ()
 addServeSocket socket = do
   (chost,stream) <- socketAccept socket
-  putStrLn $ "Connection from "++chost
+  putStrLn $ "Connection from " ++ chost
   serverLoop stream
  where
    serverLoop h = do
@@ -48,11 +48,11 @@ addServeSocket socket = do
 
 addClient :: Show a => String -> a -> a -> IO ()
 addClient host x y = do
-  h <- connectToSocket (addSocketName++"@"++host)
+  h <- connectToSocket (addSocketName ++ "@" ++ host)
   hPutStr h (unlines (map show [x,y]))
   hFlush h
   answer <- hGetLine h
-  putStrLn $ "Answer: "++answer
+  putStrLn $ "Answer: " ++ answer
   hClose h
 
 {-

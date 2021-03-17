@@ -11,7 +11,7 @@
 --- `connectToSocket` to request a service.
 ---
 --- @author Michael Hanus
---- @version December 2018
+--- @version March 2021
 ------------------------------------------------------------------------------
 
 module Network.NamedSocket
@@ -22,8 +22,8 @@ module Network.NamedSocket
   )
  where
 
-import System (sleep)
-import IO(Handle)
+import System.Process ( sleep )
+import System.IO      ( Handle )
 import qualified Network.Socket as Socket
 import Network.CPNS
 
@@ -118,7 +118,7 @@ connectToSocketRepeat waittime action retries nameAtHost = do
 ---         which is both readable and writable
 connectToSocketWait :: String -> IO Handle
 connectToSocketWait nameAtHost = do
-  Just hdl <- connectToSocketRepeat 1000 done (-1) nameAtHost
+  Just hdl <- connectToSocketRepeat 1000 (return ()) (-1) nameAtHost
   return hdl
 
 --- Creates a new connection to an existing(!) Unix socket with a symbolic
@@ -137,7 +137,7 @@ connectToSocket nameAtHost = do
   if snr==0
     then error ("connectToSocket: Socket \""++name++"@"++host++
                 "\" is not registered!")
-    else done
+    else return ()
   Socket.connectToSocket host snr
 
 

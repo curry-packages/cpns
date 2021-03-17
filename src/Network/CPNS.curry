@@ -4,7 +4,7 @@
 --- the library `Ports` for distributed programming with ports.
 ---
 --- @author Michael Hanus
---- @version January 2019
+--- @version March 2021
 ------------------------------------------------------------------------------
 
 module Network.CPNS
@@ -13,14 +13,16 @@ module Network.CPNS
   )
  where
 
-import Char     ( isSpace )
-import IO
-import List     ( delete )
-import System
-import Time
+import Control.Monad      ( unless )
+import Data.List          ( delete )
+import System.Environment ( getHostname )
+import System.IO
 
-import Debug.Profile  ( getProcessInfos, showMemInfo )
-import Network.Socket
+import Data.Time          ( calendarTimeToString, getLocalTime )
+import System.Process     ( getPID, system )
+
+import Debug.Profile      ( getProcessInfos, showMemInfo )
+import Network.Socket     ( Socket, accept, connectToSocket, listenOn )
 
 import Network.CPNS.Config
 
@@ -56,13 +58,13 @@ cpnsStart = catch startup
                   (\_ -> addLogLn "FAILURE occurred during startup!" >>
                          deleteStartupLockfile >>
                          return Nothing) >>=
-             maybe done (cpnsServer [])
+             maybe (return ()) (cpnsServer [])
  where
    deleteStartupLockfile = do
      lockfile <- getStartupLockFile
      addLogLn $ "Removing startup lock file \"" ++ lockfile ++ "\"..."
      system $ "/bin/rm -f " ++ lockfile
-     done
+     return ()
 
    startup = do
      addLogLn $ "Starting Curry Port Name Server on port " ++
@@ -179,7 +181,7 @@ getRegisteredPortName regs pname =
 -- if the corresponding server process does not exist.
 getAndCleanRegs :: [(String,Int,Int,Int)] -> IO [(String,Int,Int,Int)]
 getAndCleanRegs regs = do
-  newreglist <- mapIO checkAndShow regs
+  newreglist <- mapM checkAndShow regs
   return (concat newreglist)
  where
   checkAndShow reg@(_,pid,_,_) = do
@@ -211,10 +213,13 @@ doIfAlive :: String -> IO a -> IO a
 doIfAlive host action = do
   alive <- cpnsAlive host
   if not alive
-   then error $ "Curry port name server at host \"" ++ host ++
-                "\" is not reachable (timeout after " ++ show cpnsTimeOut ++
-                " ms)!"
+   then error $ timeOutMessage host
    else action
+
+timeOutMessage :: String -> String
+timeOutMessage host =
+  "Curry port name server at host \"" ++ host ++
+  "\" is not reachable (timeout after " ++ show cpnsTimeOut ++ " ms)!"
 
 sendToLocalCPNS :: CPNSMessage -> IO ()
 sendToLocalCPNS msg = doIfAlive "localhost" $ do
@@ -256,7 +261,7 @@ cpnsTryGetAnswer host msg = catch tryGetAnswer connectError
        either (\line -> error $ "cpnsTryGetAnswer: Illegal answer: " ++ line)
               return
               answer
-     else failed
+     else error $ timeOutMessage host
 
   connectError _ = error $ "Curry port name server at host \""++host++
                            "\" is not reachable!"
@@ -269,7 +274,7 @@ registerPort pname sn pn = do
   startCPNSDIfNecessary
   pid <- getPID
   ack <- cpnsTryGetAnswer "localhost" (Register pname pid sn pn)
-  if ack then done
+  if ack then return ()
          else addLogLn ("WARNING: Port name '"++pname++"' already registered!")
 
 --- Gets the information about a symbolic port (first argument)
@@ -303,7 +308,7 @@ startCPNSDIfNecessary = do
   unless alive $ do
     cpnsbin <- getCPNSD
     system $ cpnsbin ++ " start"
-    done
+    return ()
 
 {-
 Testing:
