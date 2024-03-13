@@ -23,7 +23,7 @@
         "options": { "kics2" : ":set rts -T" }
     },
     "source": {
-      "git": "https://git.ps.informatik.uni-kiel.de/curry-packages/cpns.git",
+      "git": "https://github.com/curry-packages/cpns.git",
       "tag": "$version"
     }
 }
